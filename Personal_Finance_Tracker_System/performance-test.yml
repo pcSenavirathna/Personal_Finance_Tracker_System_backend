@@ -1,0 +1,21 @@
+config:
+  target: 'http://localhost:8000'
+  phases:
+    - duration: 60
+      arrivalRate: 10
+scenarios:
+  - flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "testuser@example.com"
+            password: "password123"
+      - get:
+          url: "/api/user/profile"
+      - post:
+          url: "/api/user/transactions"
+          json:
+            type: "expense"
+            category: "Food"
+            amount: 50
+            currency: "USD"

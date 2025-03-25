@@ -1,0 +1,181 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+	  "title": "Personal Finance Tracker API",
+	  "version": "1.0.0",
+	"description": "API documentation for managing personal finances with authentication and role-based access.",
+	  "contact": {
+		"name": "Developer"
+	  }
+	},
+	"servers": [
+	  {
+		"url": "http://localhost:8000",
+		"description": "Local Server"
+	  }
+	],
+	"components": {
+	  "securitySchemes": {
+		"bearerAuth": {
+		  "type": "http",
+		  "scheme": "bearer",
+		  "bearerFormat": "JWT"
+		}
+	  }
+	},
+	"security": [
+	  {
+		"bearerAuth": []
+	  }
+	],
+	"paths": {
+	  "/api/auth/register": {
+		"post": {
+		  "summary": "Register a new user",
+		  "description": "Creates a new user or admin account.",
+		  "tags": ["Auth"],
+		  "requestBody": {
+			"required": true,
+			"content": {
+			  "application/json": {
+				"schema": {
+				"$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"201": {
+			  "description": "User registered successfully"
+			},
+			"400": {
+			  "description": "User already exists or passwords do not match"
+			}
+		  }
+		}
+	  },
+	  "/api/auth/login": {
+		"post": {
+		  "summary": "Login a user",
+		  "description": "Authenticates user and returns a JWT token.",
+		  "tags": ["Auth"],
+		  "requestBody": {
+			"required": true,
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"email": {
+					  "type": "string",
+					  "example": "johndoe@example.com"
+					},
+					"password": {
+					  "type": "string",
+					  "example": "password123"
+					}
+				  }
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "Successful login"
+			},
+			"400": {
+			  "description": "Invalid credentials"
+			}
+		  }
+		}
+	},
+	"/api/admin/users": {
+		"get": {
+			"summary": "Get all users",
+			"description": "Only Admins can access this endpoint.",
+			"tags": [
+				"Admin"
+			],
+			"security": [
+				{
+					"bearerAuth": []
+				}
+			],
+			"responses": {
+				"200": {
+					"description": "List of users"
+				},
+				"403": {
+					"description": "Access Denied. Admins only."
+				}
+			}
+		}
+	},
+	"/api/admin/reports": {
+		"get": {
+			"summary": "View transaction reports",
+			"description": "Only Admins can view all financial reports.",
+			"tags": [
+				"Admin"
+			],
+			"security": [
+				{
+					"bearerAuth": []
+				}
+			],
+			"responses": {
+				"200": {
+					"description": "List of financial reports"
+				},
+				"403": {
+					"description": "Access Denied. Admins only."
+				}
+			}
+		}
+	},
+	"/api/user/profile": {
+		"get": {
+			"summary": "View user profile",
+			"description": "Authenticated users can view their own profile.",
+			"tags": [
+				"User"
+			],
+			"security": [
+				{
+					"bearerAuth": []
+				}
+			],
+			"responses": {
+				"200": {
+					"description": "User profile"
+				},
+				"401": {
+					"description": "Unauthorized"
+				}
+			}
+		}
+	},
+	"/api/user/transactions": {
+		"get": {
+			"summary": "View user transactions",
+			"description": "Users can view their own transactions.",
+			"tags": [
+				"User"
+			],
+			"security": [
+				{
+					"bearerAuth": []
+				}
+			],
+			"responses": {
+				"200": {
+					"description": "List of transactions"
+				},
+				"401": {
+					"description": "Unauthorized"
+				}
+			}
+		}
+	}
+	}
+}
